@@ -11,6 +11,7 @@
 		133669432BE82F9100484032 /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1336693F2BE82F9100484032 /* image.cpp */; };
 		13592D002CC07A610052D0E9 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13592CFF2CC07A610052D0E9 /* libpng16.a */; };
 		13592D022CC083690052D0E9 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13592D012CC083690052D0E9 /* libz.a */; };
+		13592D3D2CC5625F0052D0E9 /* rePiX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13592D3C2CC5625F0052D0E9 /* rePiX.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,12 +32,13 @@
 		133669302BE82EA000484032 /* repix */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = repix; sourceTree = BUILT_PRODUCTS_DIR; };
 		133669332BE82EA000484032 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		1336693A2BE82F4200484032 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		1336693B2BE82F4D00484032 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		1336693F2BE82F9100484032 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		133669402BE82F9100484032 /* build.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.txt; sourceTree = "<group>"; };
 		133669412BE82F9100484032 /* image.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = image.hpp; sourceTree = "<group>"; };
 		13592CFF2CC07A610052D0E9 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = ../../../../usr/local/Cellar/libpng/1.6.44/lib/libpng16.a; sourceTree = "<group>"; };
 		13592D012CC083690052D0E9 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../usr/local/zlib/lib/libz.a; sourceTree = "<group>"; };
+		13592D3B2CC5625F0052D0E9 /* rePiX.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rePiX.hpp; sourceTree = "<group>"; };
+		13592D3C2CC5625F0052D0E9 /* rePiX.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rePiX.cpp; sourceTree = "<group>"; };
 		138F54E22CA0E72B009357F9 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		138F54E32CA0E7B3009357F9 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,7 +61,6 @@
 			children = (
 				1336693A2BE82F4200484032 /* README.md */,
 				138F54E22CA0E72B009357F9 /* LICENSE */,
-				1336693B2BE82F4D00484032 /* Makefile */,
 				130BEBC62CA1C48600E921B4 /* assets */,
 				138F54E32CA0E7B3009357F9 /* examples */,
 				133669322BE82EA000484032 /* src */,
@@ -84,6 +85,8 @@
 				1336693F2BE82F9100484032 /* image.cpp */,
 				130BEBC72CA340F700E921B4 /* build.h */,
 				133669402BE82F9100484032 /* build.txt */,
+				13592D3B2CC5625F0052D0E9 /* rePiX.hpp */,
+				13592D3C2CC5625F0052D0E9 /* rePiX.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -177,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				133669342BE82EA000484032 /* main.cpp in Sources */,
+				13592D3D2CC5625F0052D0E9 /* rePiX.cpp in Sources */,
 				133669432BE82F9100484032 /* image.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -28,7 +28,8 @@
 #include <fstream>
 #include <array>
 
-#include "image.hpp"
+#include "rePiX.hpp"
+//#include "image.hpp"
 
 #include "build.h"
 
@@ -168,222 +169,6 @@ std::string removeExtension(const std::string& filename) {
     return filename.substr(0, lastDotPosition);
 }
 
-typedef struct {
-    float r; // Red component (0-1)
-    float g; // Green component (0-1)
-    float b; // Blue component (0-1)
-} RGB;
-
-typedef struct {
-    float h; // Hue (0-360 degrees)
-    float s; // Saturation (0-1)
-    float v; // Value (0-1)
-} HSV;
-
-HSV rgbToHsv(RGB rgb) {
-    HSV hsv;
-    float r = rgb.r, g = rgb.g, b = rgb.b;
-    float max = (r > g) ? (r > b ? r : b) : (g > b ? g : b); // Max RGB value
-    float min = (r < g) ? (r < b ? r : b) : (g < b ? g : b); // Min RGB value
-    float delta = max - min;
-
-    // Compute Hue
-    if (delta < 0.00001f) {
-        hsv.h = 0; // Undefined hue
-    } else if (max == r) {
-        hsv.h = 60.0f * (fmod(((g - b) / delta), 6.0f));
-    } else if (max == g) {
-        hsv.h = 60.0f * (((b - r) / delta) + 2.0f);
-    } else {
-        hsv.h = 60.0f * (((r - g) / delta) + 4.0f);
-    }
-
-    if (hsv.h < 0) {
-        hsv.h += 360.0f;
-    }
-
-    // Compute Saturation
-    hsv.s = (max == 0) ? 0 : (delta / max);
-
-    // Compute Value
-    hsv.v = max;
-
-    return hsv;
-}
-
-RGB hsvToRgb(HSV hsv) {
-    RGB rgb;
-    float h = hsv.h, s = hsv.s, v = hsv.v;
-    float c = v * s;   // Chroma
-    float x = c * (1 - fabs(fmod(h / 60.0, 2) - 1)); // Intermediate value
-    float m = v - c;
-
-    float r_prime, g_prime, b_prime;
-
-    if (h >= 0 && h < 60) {
-        r_prime = c;
-        g_prime = x;
-        b_prime = 0;
-    } else if (h >= 60 && h < 120) {
-        r_prime = x;
-        g_prime = c;
-        b_prime = 0;
-    } else if (h >= 120 && h < 180) {
-        r_prime = 0;
-        g_prime = c;
-        b_prime = x;
-    } else if (h >= 180 && h < 240) {
-        r_prime = 0;
-        g_prime = x;
-        b_prime = c;
-    } else if (h >= 240 && h < 300) {
-        r_prime = x;
-        g_prime = 0;
-        b_prime = c;
-    } else {
-        r_prime = c;
-        g_prime = 0;
-        b_prime = x;
-    }
-
-    // Adjust based on the lightness (add m)
-    rgb.r = r_prime + m;
-    rgb.g = g_prime + m;
-    rgb.b = b_prime + m;
-
-    return rgb;
-}
-
-RGB argbToRgb(unsigned int argb) {
-    RGB rgb;
-
-    // Extract the RGB components from the ARGB value
-    unsigned char r = (argb >> 16) & 0xFF; // Red (bits 16-23)
-    unsigned char g = (argb >> 8) & 0xFF;  // Green (bits 8-15)
-    unsigned char b = argb & 0xFF;         // Blue (bits 0-7)
-
-    // Normalize the values to the range 0-1
-    rgb.r = r / 255.0f;
-    rgb.g = g / 255.0f;
-    rgb.b = b / 255.0f;
-
-    return rgb;
-}
-
-unsigned int rgbToArgb(RGB rgb, unsigned char alpha) {
-    // Convert the RGB values (0-1 range) back to 0-255 range
-    unsigned char r = (unsigned char)(rgb.r * 255.0f);
-    unsigned char g = (unsigned char)(rgb.g * 255.0f);
-    unsigned char b = (unsigned char)(rgb.b * 255.0f);
-
-    // Combine ARGB into a 32-bit integer
-    unsigned int argb = (alpha << 24) | (r << 16) | (g << 8) | b;
-    return argb;
-}
-
-// Function to reduce resolution of a single color channel (0-1 float)
-float postorize(float value, int levels) {
-    float step = 1.0f / (levels - 1);  // Calculate step size for quantization
-    return round(value / step) * step; // Quantize by reducing the range
-}
-
-// Function to reduce the resolution of RGB channels (0-1 range)
-RGB posterizeRgb(RGB rgb, int levels) {
-    RGB reducedRgb;
-    reducedRgb.r = postorize(rgb.r, levels);
-    reducedRgb.g = postorize(rgb.g, levels);
-    reducedRgb.b = postorize(rgb.b, levels);
-    return reducedRgb;
-}
-
-
-void setImagePixel(const TImage* image, unsigned short x, unsigned short y, uint32_t color) {
-    if (x >= image->width || y >= image->height) return;
-    
-    uint32_t* pixelData = (uint32_t*)image->data;
-    pixelData[x + y * image->width] = color;
-}
-
-uint32_t getImagePixel(const TImage* image, unsigned short x, unsigned short y) {
-    if (x >= image->width || y >= image->height) return 0;
-    
-    uint32_t* pixelData = (uint32_t*)image->data;
-    return pixelData[x + y * image->width];
-}
-
-void posterizeImage(const TImage* image, int levels) {
-    for (int y = 0; y < image->height; ++y) {
-        for (int x = 0; x < image->width; ++x) {
-            RGB rgb = argbToRgb(getImagePixel(image, x, y));
-            rgb = posterizeRgb(rgb, levels);
-            setImagePixel(image, x, y, rgbToArgb(rgb, 255));
-        }
-    }
-}
-
-uint32_t blockColor(const TImage* image, int blockSize, int x, int y) {
-    typedef struct {
-        union {
-            uint32_t ARGB;
-            struct {
-                uint32_t R:8;
-                uint32_t G:8;
-                uint32_t B:8;
-                uint32_t A:8;
-            } channel;
-        };
-    } TColor;
-    
-    
-    TColor color;
-    long r,g,b,a;
-    
-    r = g = b = a = 0;
-    
-    for (int i = 0; i < blockSize; ++i) {
-        for (int j = 0; j < blockSize; ++j) {
-            color.ARGB = getImagePixel(image, x + j, y + i);
-            r += color.channel.R;
-            g += color.channel.G;
-            b += color.channel.B;
-            a += color.channel.A;
-        }
-    }
-    
-    long pixelCount = blockSize * blockSize;
-    color.channel.R = (uint32_t)(r /= pixelCount);
-    color.channel.G = (uint32_t)(g /= pixelCount);
-    color.channel.B = (uint32_t)(b /= pixelCount);
-    color.channel.A = (uint32_t)(a /= pixelCount);
-    
-   
-    return color.ARGB;
-    
-    
-}
-
-TImage* restorePixelatedImage(const TImage* image, float blockSize) {
-    uint32_t color;
-    
-    TImage* restored;
-    restored = createPixmap(floor(image->width / blockSize), floor(image->height / blockSize), 32);
-    if (restored == nullptr) return nullptr;
-    
-    for (float y = 0; y < image->height; y += blockSize) {
-        for (float x = 0; x < image->width; x += blockSize) {
-            if (blockSize > 3.0) {
-                color = blockColor(image, 2, x + blockSize / 2 - 1, y + blockSize / 2 - 1);
-            }
-            else {
-                color = getImagePixel(image, x + blockSize / 2, y + blockSize / 2);
-            }
-            
-            setImagePixel(restored, floor(x / blockSize), floor(y / blockSize), color);
-        }
-    }
-    
-    return restored;
-}
 
 int main(int argc, const char * argv[])
 {
@@ -393,9 +178,11 @@ int main(int argc, const char * argv[])
     }
     
     std::string out_filename, in_filename;
-    float blockSize = 1;
+    
     int levels = 255;
-    int scale = 1;
+    
+    
+    rePiX repix = rePiX();
     
     for( int n = 1; n < argc; n++ ) {
         if (*argv[n] == '-') {
@@ -409,7 +196,7 @@ int main(int argc, const char * argv[])
             
             if (args == "-b") {
                 if (++n > argc) error();
-                blockSize = atof(argv[n]);
+                repix.setBlockSize(atof(argv[n]));
                 continue;
             }
             
@@ -421,7 +208,7 @@ int main(int argc, const char * argv[])
             
             if (args == "-s") {
                 if (++n > argc) error();
-                scale = atoi(argv[n]);
+                repix.setScale(atoi(argv[n]));
                 continue;
             }
             
@@ -449,36 +236,20 @@ int main(int argc, const char * argv[])
     }
     
     if (out_filename.empty() || out_filename == in_filename) {
-        out_filename = removeExtension(in_filename) + "@" + std::to_string(scale) + "x.png";
+        out_filename = removeExtension(in_filename) + "@" + std::to_string(repix.scale) + "x.png";
     }
     
-
+    repix.loadPixelatedImage(in_filename);
     
-    TImage* image;
-    image = loadPNGGraphicFile(in_filename);
-    if (image == nullptr) {
+    if (!repix.isPixelatedImageLoaded()) {
         std::cout << MessageType::Error << "File '" << in_filename << "' failed to load.\n";
         return -1;
     }
     
-    TImage* restoredImage = restorePixelatedImage(image, blockSize);
+    repix.restorePixelatedImage();
+    repix.postorize(levels);
+    repix.saveAs(out_filename);
     
-    if (restoredImage != nullptr) {
-        posterizeImage(restoredImage, levels);
-        if (scale > 1) {
-            TImage* scaledImage = scaleImage(restoredImage, scale);
-            if (scaledImage != nullptr) {
-                saveImageAsPNGFile(scaledImage, out_filename);
-                reset(scaledImage);
-            }
-        } else {
-            saveImageAsPNGFile(restoredImage, out_filename);
-        }
-        
-        reset(restoredImage);
-    }
-    
-    reset(image);
     
     return 0;
 }
