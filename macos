@@ -46,7 +46,7 @@ fi
 
 echo "Compiling Code..."
 echo "macOS Universal Binary"
-g++ -arch x86_64 -arch arm64 -std=c++20 src/*.cpp -o bin/macos/$xcodeproj_name -Os -fno-ident -fno-asynchronous-unwind-tables
+g++ -std=c++20 src/*.cpp /usr/local/libpng/lib/libpng.a /usr/local/zlib/lib/libz.a -o bin/macos/$xcodeproj_name -Os -fno-ident -fno-asynchronous-unwind-tables -I/usr/local/include -L/usr/local/lib
 strip bin/macos/$xcodeproj_name
 lipo -info bin/macos/$xcodeproj_name
 
