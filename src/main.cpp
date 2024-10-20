@@ -108,7 +108,7 @@ void help(void)
     int rev = BUILD_NUMBER / 1000 % 10;
     
     std::cout << "Copyright (C) 2024 Insoft. All rights reserved.\n";
-    std::cout << "Insoft rePix version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
+    std::cout << "Insoft rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
     << " (BUILD " << getBuildCode() << "-" << decimalToBase24(BUILD_DATE) << ")\n\n";
     std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>]\n\n";
     std::cout << "Options:\n";
@@ -125,7 +125,7 @@ void help(void)
 
 void version(void) {
     std::cout << "Copyright (C) 2024 Insoft. All rights reserved.\n";
-    std::cout << "Insoft rePix version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << "." << BUILD_NUMBER / 1000 % 10
+    std::cout << "Insoft rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << "." << BUILD_NUMBER / 1000 % 10
     << " (BUILD " << getBuildCode() << ")\n";
     std::cout << "Built on: " << CURRENT_DATE << "\n";
     std::cout << "Licence: MIT License\n\n";
@@ -141,7 +141,7 @@ void error(void)
 void info(void) {
     std::cout << "Copyright (c) 2024 Insoft. All rights reserved.\n";
     int rev = BUILD_NUMBER / 1000 % 10;
-    std::cout << "rePix version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
+    std::cout << "rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
     << " (BUILD " << getBuildCode() << "-" << decimalToBase24(BUILD_DATE) << ")\n\n";
 }
 
