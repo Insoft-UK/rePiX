@@ -57,6 +57,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-a $(PROJECT_DIR)/examples/example.act"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-help"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -69,7 +73,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-b 6.25 -p 32 -s 6"
+            argument = "-b 6.0 -p 255 -s 3 -m 3 -l"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

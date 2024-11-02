@@ -23,6 +23,7 @@
  */
 
 #include "rePiX.hpp"
+#include "ImageAdjustments.hpp"
 
 #include <string>
 
@@ -214,52 +215,117 @@ static uint32_t blockColor(const TImage* image, int blockSize, int x, int y) {
     
 }
 
+static uint32_t getPixel(const unsigned x, const unsigned y, const unsigned w, const unsigned h, const uint32_t *pixelData) {
+    if (x >= w || y >= h) return 0;
+    return pixelData[x + y * w];
+}
+
+static uint32_t averageColorForSampleSize(unsigned int size, unsigned x, unsigned y, const unsigned w, const unsigned h, const uint32_t *pixelData) {
+    struct {
+        union {
+            uint32_t rgba;
+            struct {
+                uint32_t r:8;
+                uint32_t g:8;
+                uint32_t b:8;
+                uint32_t a:8;
+            } channel;
+        };
+    } color;
+    
+    if (size < 1) size = 1;
+    uint32_t r,g,b,a;
+    
+    r = g = b = a = 0;
+    
+    x -= size / 2;
+    y -= size / 2;
+    
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            color.rgba = getPixel(x + j, y + i, w, h, pixelData);
+            r += color.channel.r;
+            g += color.channel.g;
+            b += color.channel.b;
+            a += color.channel.a;
+        }
+    }
+    
+    unsigned avarage = size * size;
+    color.channel.r = (uint32_t)(r /= avarage);
+    color.channel.g = (uint32_t)(g /= avarage);
+    color.channel.b = (uint32_t)(b /= avarage);
+    color.channel.a = (uint32_t)(a /= avarage);
+    
+    
+    return color.rgba;
+}
+
 //MARK: - Method/s Implimentatin
 
 void rePiX::setBlockSize(float value) {
     _blockSize = value < 1 ? 1 : value;
 }
 
-void rePiX::setScale(unsigned int scale) {
+void rePiX::autoAdjustBlockSize(void) {
+    float width = static_cast<float>(_originalImage->width);
+    _blockSize = width / floor(width / floor(_blockSize));
+    
+    float integerPart;
+    float fractionalPart;
+    
+    fractionalPart = modff(_blockSize, &integerPart);
+    
+    if (fractionalPart > 0.01) {
+        _blockSize -= 0.01;
+    }
+}
+
+void rePiX::setScale(const unsigned int scale) {
     _scale = scale < 1 ? 1 : scale;
+}
+
+void rePiX::setSamplePointSize(const unsigned size) {
+    _samplePointSize = size;
 }
 
 void rePiX::restorePixelatedImage(void) {
     uint32_t color;
+    float x, y;
+    int destX, destY;
     
     _newImage = createPixmap(floor(_originalImage->width / _blockSize), floor(_originalImage->height / _blockSize), 32);
-    if (_originalImage == nullptr || _originalImage->data == nullptr) return;
-    
-    for (float y = 0; y < _originalImage->height; y += _blockSize) {
-        for (float x = 0; x < _originalImage->width; x += _blockSize) {
-            if (_blockSize > 3.0) {
-                color = blockColor(_originalImage, 2, x + _blockSize / 2 - 1, y + _blockSize / 2 - 1);
-            }
-            else {
-                color = getImagePixel(_originalImage, x + _blockSize / 2, y + _blockSize / 2);
-            }
-            
-            setImagePixel(_newImage, floor(x / _blockSize), floor(y / _blockSize), color);
+    for (destY = 0, y = 0; y < _originalImage->height; y += _blockSize, destY++) {
+        for (destX = 0, x = 0; x < _originalImage->width; x += _blockSize, destX++) {
+            color = averageColorForSampleSize(_samplePointSize, x + _blockSize / 2, y + _blockSize / 2, _originalImage->width, _originalImage->height, (uint32_t *)_originalImage->data);
+            setImagePixel(_newImage, destX, destY, color);
         }
     }
-    
-    TImage* scaledImage = scaleImage(_newImage, _scale);
-    reset(_newImage);
-    _newImage = scaledImage;
 }
 
-void rePiX::postorize(unsigned int levels) {
+void rePiX::postorize(const unsigned int levels) {
     if (_newImage == nullptr || _newImage->data == nullptr) return;
-    
-    for (int y = 0; y < _newImage->height; ++y) {
-        for (int x = 0; x < _newImage->width; ++x) {
-            RGB rgb = argbToRgb(getImagePixel(_newImage, x, y));
-            rgb = posterizeRgb(rgb, levels);
-            setImagePixel(_newImage, x, y, rgbToArgb(rgb, 255));
-        }
-    }
+    ImageAdjustments::postorize(_newImage->data, _newImage->width * _newImage->height, levels);
+}
+
+void rePiX::normalizeColors(const float threshold) {
+    ImageAdjustments::normalizeColors((const void *)_newImage->data, _newImage->width, _newImage->height, threshold);
 }
 
 void rePiX::saveAs(std::string& filename) {
     saveImageAsPNGFile(_newImage, filename);
+}
+
+void rePiX::normalizeColorsToColorTable(const ColorTable& colorTable) {
+    ImageAdjustments::normalizeColorsToPalette(_newImage->data, _newImage->width, _newImage->height, colorTable.colors.data(), colorTable.defined, colorTable.transparency);
+}
+
+void rePiX::applyOutline(void) {
+    ImageAdjustments::applyOutline(_newImage->data, _newImage->width, _newImage->height);
+}
+
+void rePiX::applyScale(void) {
+    TImage* scaledImage = scaleImage(_newImage, _scale);
+    reset(_newImage);
+    _newImage = scaledImage;
 }

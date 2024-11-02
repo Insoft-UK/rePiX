@@ -12,6 +12,8 @@
 		13592D002CC07A610052D0E9 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13592CFF2CC07A610052D0E9 /* libpng16.a */; };
 		13592D022CC083690052D0E9 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13592D012CC083690052D0E9 /* libz.a */; };
 		13592D3D2CC5625F0052D0E9 /* rePiX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13592D3C2CC5625F0052D0E9 /* rePiX.cpp */; };
+		136449C32CD69E670046BDC4 /* ImageAdjustments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 136449C22CD69E670046BDC4 /* ImageAdjustments.cpp */; };
+		136449C62CD6A0010046BDC4 /* ColorTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 136449C52CD6A0010046BDC4 /* ColorTable.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +41,10 @@
 		13592D012CC083690052D0E9 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../usr/local/zlib/lib/libz.a; sourceTree = "<group>"; };
 		13592D3B2CC5625F0052D0E9 /* rePiX.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rePiX.hpp; sourceTree = "<group>"; };
 		13592D3C2CC5625F0052D0E9 /* rePiX.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = rePiX.cpp; sourceTree = "<group>"; };
+		136449C12CD69E670046BDC4 /* ImageAdjustments.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageAdjustments.hpp; sourceTree = "<group>"; };
+		136449C22CD69E670046BDC4 /* ImageAdjustments.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ImageAdjustments.cpp; sourceTree = "<group>"; };
+		136449C42CD6A0010046BDC4 /* ColorTable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ColorTable.hpp; sourceTree = "<group>"; };
+		136449C52CD6A0010046BDC4 /* ColorTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ColorTable.cpp; sourceTree = "<group>"; };
 		138F54E22CA0E72B009357F9 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		138F54E32CA0E7B3009357F9 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +93,10 @@
 				133669402BE82F9100484032 /* build.txt */,
 				13592D3B2CC5625F0052D0E9 /* rePiX.hpp */,
 				13592D3C2CC5625F0052D0E9 /* rePiX.cpp */,
+				136449C12CD69E670046BDC4 /* ImageAdjustments.hpp */,
+				136449C22CD69E670046BDC4 /* ImageAdjustments.cpp */,
+				136449C42CD6A0010046BDC4 /* ColorTable.hpp */,
+				136449C52CD6A0010046BDC4 /* ColorTable.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -181,6 +191,8 @@
 			files = (
 				133669342BE82EA000484032 /* main.cpp in Sources */,
 				13592D3D2CC5625F0052D0E9 /* rePiX.cpp in Sources */,
+				136449C62CD6A0010046BDC4 /* ColorTable.cpp in Sources */,
+				136449C32CD69E670046BDC4 /* ImageAdjustments.cpp in Sources */,
 				133669432BE82F9100484032 /* image.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

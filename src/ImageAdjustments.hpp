@@ -22,46 +22,19 @@
  SOFTWARE.
  */
 
-#ifndef rePiX_hpp
-#define rePiX_hpp
+// Written for Little Endian!
 
-#include "image.hpp"
-#include "ColorTable.hpp"
+#ifndef ImageAdjustments_hpp
+#define ImageAdjustments_hpp
 
-class rePiX {
+#include <stdint.h>
+
+class ImageAdjustments {
 public:
-    const unsigned int& scale = _scale;
-    
-    ~rePiX() {
-        reset(_originalImage);
-        reset(_newImage);
-    }
-    
-    bool isPixelatedImageLoaded(void) {
-        return (_originalImage != nullptr && _originalImage->data != nullptr);
-    }
-    
-    void loadPixelatedImage(std::string& imagefile) {
-        _originalImage = loadPNGGraphicFile(imagefile);
-    }
-    void setBlockSize(const float value);
-    void autoAdjustBlockSize(void);
-    void setScale(const unsigned int scale);
-    void setSamplePointSize(const unsigned size);
-    void restorePixelatedImage(void);
-    void postorize(const unsigned int levels);
-    void normalizeColors(const float threshold);
-    void normalizeColorsToColorTable(const ColorTable& colorTable);
-    void applyOutline(void);
-    void saveAs(std::string& filename);
-    void applyScale(void);
-    
-private:
-    TImage* _originalImage = nullptr;
-    TImage* _newImage = nullptr;
-    float _blockSize = 1.0;
-    unsigned _scale = 1.0;
-    unsigned _samplePointSize;
+    static void postorize(const void* pixels, long length, unsigned levels);
+    static void normalizeColors(const void* pixels, int w, int h, unsigned threshold);
+    static void normalizeColorsToPalette(const void* pixels, int w, int h, const uint32_t* palt, int paletteSize, int transparencyIndex);
+    static void applyOutline(const void* pixels, int w, int h);
 };
 
-#endif /* rePiX_hpp */
+#endif /* ImageAdjustments_hpp */

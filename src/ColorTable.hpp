@@ -22,46 +22,28 @@
  SOFTWARE.
  */
 
-#ifndef rePiX_hpp
-#define rePiX_hpp
+#ifndef ColorTable_hpp
+#define ColorTable_hpp
 
-#include "image.hpp"
-#include "ColorTable.hpp"
+#include <iostream>
+#include <array>
 
-class rePiX {
+class ColorTable {
 public:
-    const unsigned int& scale = _scale;
+    const std::array<uint32_t, 256>& colors = _colors;
+    const int16_t& transparency = _transparency;
+    const int16_t& defined = _defined;
     
-    ~rePiX() {
-        reset(_originalImage);
-        reset(_newImage);
+    ColorTable() {
+        _transparency = -1;
+        _defined = 0;
     }
     
-    bool isPixelatedImageLoaded(void) {
-        return (_originalImage != nullptr && _originalImage->data != nullptr);
-    }
-    
-    void loadPixelatedImage(std::string& imagefile) {
-        _originalImage = loadPNGGraphicFile(imagefile);
-    }
-    void setBlockSize(const float value);
-    void autoAdjustBlockSize(void);
-    void setScale(const unsigned int scale);
-    void setSamplePointSize(const unsigned size);
-    void restorePixelatedImage(void);
-    void postorize(const unsigned int levels);
-    void normalizeColors(const float threshold);
-    void normalizeColorsToColorTable(const ColorTable& colorTable);
-    void applyOutline(void);
-    void saveAs(std::string& filename);
-    void applyScale(void);
-    
+    void loadAdobeColorTable(const char* filename);
 private:
-    TImage* _originalImage = nullptr;
-    TImage* _newImage = nullptr;
-    float _blockSize = 1.0;
-    unsigned _scale = 1.0;
-    unsigned _samplePointSize;
+    std::array<uint32_t, 256> _colors = {};
+    int16_t _transparency;
+    int16_t _defined;
 };
 
-#endif /* rePiX_hpp */
+#endif /* ColorTable_hpp */

@@ -29,7 +29,7 @@
 #include <array>
 
 #include "rePiX.hpp"
-//#include "image.hpp"
+#include "ColorTable.hpp"
 
 #include "build.h"
 
@@ -111,12 +111,19 @@ void help(void)
     std::cout << "Copyright (C) 2024 Insoft. All rights reserved.\n";
     std::cout << "Insoft rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
     << " (BUILD " << getBuildCode() << "-" << decimalToBase24(BUILD_DATE) << ")\n\n";
-    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>]\n\n";
+    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>] [-a <act-file>] [-l] [-n <threshold>] [-u] [-m <size>]\n\n";
     std::cout << "Options:\n";
     std::cout << "    -o  <output-file>        Specify the filename for repixilated image.\n";
     std::cout << "    -b  <size>               Specify the block size.\n";
     std::cout << "    -s  <scale>              Specify the scale factor for output image.\n";
     std::cout << "    -p  <levels>             Posterize.\n";
+    std::cout << "    -a  <act-file>           Specify the filename of the 'Adobe Color Table' file.\n";
+    std::cout << "                             use the default transparency index.\n";
+    std::cout << "    -l                       Specify if the repixilated should have a black outline applyed.\n";
+    std::cout << "    -n  <threshold>          Normalize colors with a selected threshold.\n";
+    std::cout << "    -u                       Auto adjust the specified block size for optimom sizing.\n";
+    std::cout << "    -m  <size>               Specify the sample point size, defaults to 1 if block size.\n";
+    std::cout << "                             too small of the given sample size\n";
     std::cout << "\n";
     std::cout << "Additional Commands:\n";
     std::cout << "  repix {-version | -help}\n";
@@ -179,10 +186,14 @@ int main(int argc, const char * argv[])
     
     std::string out_filename, in_filename;
     
-    int levels = 255;
     
     
     rePiX repix = rePiX();
+    ColorTable colorTable = ColorTable();
+    bool outline = false;
+    int levels = 255;
+    float threshold = 0.0;
+    bool autoAdjustBlockSize = false;
     
     for( int n = 1; n < argc; n++ ) {
         if (*argv[n] == '-') {
@@ -211,6 +222,35 @@ int main(int argc, const char * argv[])
                 repix.setScale(atoi(argv[n]));
                 continue;
             }
+            
+            if (args == "-a") {
+                if (++n > argc) error();
+                colorTable.loadAdobeColorTable(argv[n]);
+                continue;
+            }
+            
+            if (args == "-l") {
+                outline = true;
+                continue;
+            }
+            
+            if (args == "-n") {
+                if (++n > argc) error();
+                threshold = atof(argv[n]);
+                continue;
+            }
+            
+            if (args == "-u") {
+                autoAdjustBlockSize = true;
+                continue;
+            }
+            
+            if (args == "-m") {
+                if (++n > argc) error();
+                repix.setSamplePointSize(atoi(argv[n]));
+                continue;
+            }
+            
             
             if (args == "-help") {
                 help();
@@ -246,8 +286,21 @@ int main(int argc, const char * argv[])
         return -1;
     }
     
+    if (autoAdjustBlockSize) repix.autoAdjustBlockSize();
+    
     repix.restorePixelatedImage();
+    if (threshold > 0.0) {
+        repix.normalizeColors(threshold);
+    }
     repix.postorize(levels);
+    if (colorTable.defined) {
+        repix.normalizeColorsToColorTable(colorTable);
+    }
+    
+    if (outline) repix.applyOutline();
+    
+    repix.applyScale();
+    
     repix.saveAs(out_filename);
     
     
