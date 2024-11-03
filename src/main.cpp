@@ -115,20 +115,20 @@ void help(void)
     std::cout << "Options:\n";
     std::cout << "    -o  <output-file>        Specify the filename for repixilated image.\n";
     std::cout << "    -b  <size>               Specify the block size.\n";
-    std::cout << "    -s  <scale>              Specify the scale factor for output image.\n";
+    std::cout << "    -x  <scale>              Specify the scale factor for output image.\n";
     std::cout << "    -p  <levels>             Posterize.\n";
     std::cout << "    -a  <act-file>           Specify the filename of the 'Adobe Color Table' file.\n";
     std::cout << "                             use the default transparency index.\n";
     std::cout << "    -l                       Specify if the repixilated should have a black outline applyed.\n";
     std::cout << "    -n  <threshold>          Normalize colors with a selected threshold.\n";
     std::cout << "    -u                       Auto adjust the specified block size for optimom sizing.\n";
-    std::cout << "    -m  <size>               Specify the sample point size, defaults to 1 if block size.\n";
+    std::cout << "    -s  <size>               Specify the sample point size, defaults to 1 if block size.\n";
     std::cout << "                             too small of the given sample size.\n";
     std::cout << "    -w  <width>              Specifying the destination width will automatically calculate the\n";
     std::cout << "                             required block size to achieve the desired height.\n";
     std::cout << "    -h  <height>             Specifying the destination height will automatically calculate the\n";
     std::cout << "                             required block size to achieve the desired height.\n";
-    std::cout << "    -g  <size>               Specifying the surrounding margin size.\n";
+    std::cout << "    -m  <size>               Specifying the surrounding margin size.\n";
     std::cout << "\n";
     std::cout << "Additional Commands:\n";
     std::cout << "  repix {-version | -help}\n";
@@ -222,7 +222,7 @@ int main(int argc, const char * argv[])
                 continue;
             }
             
-            if (args == "-s") {
+            if (args == "-x") {
                 if (++n > argc) error();
                 repix.setScale(atoi(argv[n]));
                 continue;
@@ -250,7 +250,7 @@ int main(int argc, const char * argv[])
                 continue;
             }
             
-            if (args == "-m") {
+            if (args == "-s") {
                 if (++n > argc) error();
                 repix.setSamplePointSize(atoi(argv[n]));
                 continue;
@@ -268,7 +268,7 @@ int main(int argc, const char * argv[])
                 continue;
             }
             
-            if (args == "-g") {
+            if (args == "-m") {
                 if (++n > argc) error();
                 repix.margin = atoi(argv[n]);
                 continue;

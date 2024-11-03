@@ -73,11 +73,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-h 30 -p 255 -s 3 -m 3 -l"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-g 1"
+            argument = "-h 30 -p 255 -x 3 -s 3 -l -m 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
