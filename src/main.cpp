@@ -111,7 +111,7 @@ void help(void)
     std::cout << "Copyright (C) 2024 Insoft. All rights reserved.\n";
     std::cout << "Insoft rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
     << " (BUILD " << getBuildCode() << "-" << decimalToBase24(BUILD_DATE) << ")\n\n";
-    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>] [-a <act-file>] [-l] [-n <threshold>] [-u] [-m <size>] [-w <width>] [-h <height>] [-g <size>]\n\n";
+    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-x <scale>] [-p <levels>] [-a <act-file>] [-l] [-n <threshold>] [-u] [-s <size>] [-w <width>] [-h <height>] [-m <size>]\n\n";
     std::cout << "Options:\n";
     std::cout << "    -o  <output-file>        Specify the filename for repixilated image.\n";
     std::cout << "    -b  <size>               Specify the block size.\n";
