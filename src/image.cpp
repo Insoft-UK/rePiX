@@ -365,7 +365,8 @@ TImage *createPixmap(int w, int h, int bitWidth)
         return nullptr;
     }
     
-    image->data = (uint8_t *)malloc(w * h * (bitWidth / 8));
+    image->data = (uint8_t *)calloc(sizeof(char), w * h * (bitWidth / 8));
+//    image->data = (uint8_t *)malloc(w * h * (bitWidth / 8));
     if (!image->data) {
         free(image);
         return nullptr;

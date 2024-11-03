@@ -111,7 +111,7 @@ void help(void)
     std::cout << "Copyright (C) 2024 Insoft. All rights reserved.\n";
     std::cout << "Insoft rePiX version, " << BUILD_NUMBER / 100000 << "." << BUILD_NUMBER / 10000 % 10 << (rev ? "." + std::to_string(rev) : "")
     << " (BUILD " << getBuildCode() << "-" << decimalToBase24(BUILD_DATE) << ")\n\n";
-    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>] [-a <act-file>] [-l] [-n <threshold>] [-u] [-m <size>]\n\n";
+    std::cout << "Usage: repix <input-file> [-o <output-file>] [-b <size>] [-s <scale>] [-p <levels>] [-a <act-file>] [-l] [-n <threshold>] [-u] [-m <size>] [-w <width>] [-h <height>] [-g <size>]\n\n";
     std::cout << "Options:\n";
     std::cout << "    -o  <output-file>        Specify the filename for repixilated image.\n";
     std::cout << "    -b  <size>               Specify the block size.\n";
@@ -123,7 +123,12 @@ void help(void)
     std::cout << "    -n  <threshold>          Normalize colors with a selected threshold.\n";
     std::cout << "    -u                       Auto adjust the specified block size for optimom sizing.\n";
     std::cout << "    -m  <size>               Specify the sample point size, defaults to 1 if block size.\n";
-    std::cout << "                             too small of the given sample size\n";
+    std::cout << "                             too small of the given sample size.\n";
+    std::cout << "    -w  <width>              Specifying the destination width will automatically calculate the\n";
+    std::cout << "                             required block size to achieve the desired height.\n";
+    std::cout << "    -h  <height>             Specifying the destination height will automatically calculate the\n";
+    std::cout << "                             required block size to achieve the desired height.\n";
+    std::cout << "    -g  <size>               Specifying the surrounding margin size.\n";
     std::cout << "\n";
     std::cout << "Additional Commands:\n";
     std::cout << "  repix {-version | -help}\n";
@@ -248,6 +253,24 @@ int main(int argc, const char * argv[])
             if (args == "-m") {
                 if (++n > argc) error();
                 repix.setSamplePointSize(atoi(argv[n]));
+                continue;
+            }
+            
+            if (args == "-w") {
+                if (++n > argc) error();
+                repix.width = atoi(argv[n]);
+                continue;
+            }
+            
+            if (args == "-h") {
+                if (++n > argc) error();
+                repix.height = atoi(argv[n]);
+                continue;
+            }
+            
+            if (args == "-g") {
+                if (++n > argc) error();
+                repix.margin = atoi(argv[n]);
                 continue;
             }
             

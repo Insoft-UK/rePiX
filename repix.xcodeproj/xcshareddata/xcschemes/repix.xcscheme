@@ -73,7 +73,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-b 6.0 -p 255 -s 3 -m 3 -l"
+            argument = "-h 30 -p 255 -s 3 -m 3 -l"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-g 1"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -81,13 +85,6 @@
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "-p"
-            value = ""
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

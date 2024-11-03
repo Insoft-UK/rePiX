@@ -294,11 +294,19 @@ void rePiX::restorePixelatedImage(void) {
     float x, y;
     int destX, destY;
     
-    _newImage = createPixmap(floor(_originalImage->width / _blockSize), floor(_originalImage->height / _blockSize), 32);
+    if (width > 0 || height > 0) {
+        if (width > 0) {
+            _blockSize = (float)_originalImage->width / (float)width;
+        } else {
+            _blockSize = (float)_originalImage->height / (float)height;
+        }
+    }
+    
+    _newImage = createPixmap(floor(_originalImage->width / _blockSize) + margin * 2, floor(_originalImage->height / _blockSize) + margin * 2, 32);
     for (destY = 0, y = 0; y < _originalImage->height; y += _blockSize, destY++) {
         for (destX = 0, x = 0; x < _originalImage->width; x += _blockSize, destX++) {
             color = averageColorForSampleSize(_samplePointSize, x + _blockSize / 2, y + _blockSize / 2, _originalImage->width, _originalImage->height, (uint32_t *)_originalImage->data);
-            setImagePixel(_newImage, destX, destY, color);
+            setImagePixel(_newImage, destX + margin, destY + margin, color);
         }
     }
 }

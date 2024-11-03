@@ -31,6 +31,9 @@
 class rePiX {
 public:
     const unsigned int& scale = _scale;
+    unsigned width = 0;
+    unsigned height = 0;
+    unsigned margin = 0;
     
     ~rePiX() {
         reset(_originalImage);
@@ -44,6 +47,7 @@ public:
     void loadPixelatedImage(std::string& imagefile) {
         _originalImage = loadPNGGraphicFile(imagefile);
     }
+    
     void setBlockSize(const float value);
     void autoAdjustBlockSize(void);
     void setScale(const unsigned int scale);
