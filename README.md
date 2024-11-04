@@ -1,4 +1,4 @@
-# RePixelate
+# rePiXelate
 
 **Command Line Tool**
 
