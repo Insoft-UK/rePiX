@@ -1,4 +1,4 @@
-# Restore Pixelate
+# RePixelate
 
 **Command Line Tool**
 
