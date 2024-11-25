@@ -1,4 +1,6 @@
-# Restore Pixelate
+<img src="../../../Insoft-UK/blob/main/assets/logo.svg" width="80" height="80" />
+
+# rePiXelate
 
 **Command Line Tool**
 
