@@ -325,7 +325,7 @@ void rePiX::saveAs(std::string& filename) {
 }
 
 void rePiX::normalizeColorsToColorTable(const ColorTable& colorTable) {
-    ImageAdjustments::normalizeColorsToPalette(_newImage->data, _newImage->width, _newImage->height, colorTable.colors.data(), colorTable.defined, colorTable.transparency);
+    ImageAdjustments::mapColorsToNearestPalette(_newImage->data, _newImage->width, _newImage->height, colorTable.colors.data(), colorTable.defined, colorTable.transparency);
 }
 
 void rePiX::applyOutline(void) {

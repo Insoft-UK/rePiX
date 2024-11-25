@@ -32,7 +32,7 @@ class ColorTable {
 public:
     const std::array<uint32_t, 256>& colors = _colors;
     const int16_t& transparency = _transparency;
-    const int16_t& defined = _defined;
+    const uint16_t& defined = _defined;
     
     ColorTable() {
         _transparency = -1;
@@ -43,7 +43,7 @@ public:
 private:
     std::array<uint32_t, 256> _colors = {};
     int16_t _transparency;
-    int16_t _defined;
+    uint16_t _defined;
 };
 
 #endif /* ColorTable_hpp */

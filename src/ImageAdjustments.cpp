@@ -138,7 +138,7 @@ void ImageAdjustments::normalizeColors(const void* pixels, int w, int h, unsigne
     free(buckets);
 }
 
-void ImageAdjustments::normalizeColorsToPalette(const void* pixels, int w, int h, const uint32_t* palt, int paletteSize, int transparencyIndex) {
+void ImageAdjustments::mapColorsToNearestPalette(const void* pixels, int w, int h, const uint32_t* palt, int paletteSize, int transparencyIndex) {
     Color* colors = (Color *)pixels;
     
     for (int y = 0; y < h; ++y) {
